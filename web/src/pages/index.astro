@@ -1,0 +1,79 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "~/layouts/BaseLayout.astro";
+import BentoHero from "~/components/BentoHero.astro";
+import ArticleCard from "~/components/ArticleCard.astro";
+import { CATEGORY_META } from "~/content/config";
+import { SITE } from "~/consts";
+
+const allArticles = (await getCollection("articles", ({ data }) => !data.draft))
+  .sort((a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf());
+
+const hero = allArticles.slice(0, 7);
+const rest = allArticles.slice(7);
+
+const byCategory = (Object.keys(CATEGORY_META) as Array<keyof typeof CATEGORY_META>).map((key) => ({
+  key,
+  meta: CATEGORY_META[key],
+  items: rest.filter((a) => a.data.category === key).slice(0, 4),
+}));
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: SITE.name,
+  description: SITE.description,
+  url: Astro.site?.toString(),
+  inLanguage: "ru-RU",
+};
+---
+
+<BaseLayout
+  title={SITE.name}
+  description={SITE.description}
+  jsonLd={jsonLd}
+>
+  {hero.length > 0 ? (
+    <BentoHero articles={hero} />
+  ) : (
+    <section class="container-prose py-section text-center">
+      <p class="kicker">Скоро</p>
+      <h1 class="font-serif text-display mt-3">Готовим первые материалы</h1>
+      <p class="mt-6 text-ink/70 max-w-xl mx-auto">
+        Журнал только запускается — контент начнёт появляться в ближайшие дни.
+      </p>
+    </section>
+  )}
+
+  {byCategory.map(({ key, meta, items }) =>
+    items.length > 0 ? (
+      <section class="container-prose pb-section">
+        <div class="flex items-end justify-between mb-8 pb-4 border-b border-ink/10">
+          <div>
+            <p class="kicker">Рубрика</p>
+            <h2 class="font-serif text-3xl md:text-4xl mt-1">{meta.label}</h2>
+          </div>
+          <a
+            href={`/${key}`}
+            class="no-underline text-sm text-ink/70 hover:text-terracotta"
+          >
+            Все материалы →
+          </a>
+        </div>
+        <div class="grid gap-6 md:gap-8 md:grid-cols-4">
+          {items.map((entry) => (
+            <ArticleCard
+              href={`/${entry.data.category}/${entry.slug}`}
+              title={entry.data.title}
+              category={entry.data.category}
+              heroImage={entry.data.heroImage}
+              heroImageAlt={entry.data.heroImageAlt}
+              publishedAt={entry.data.publishedAt}
+              variant="medium"
+            />
+          ))}
+        </div>
+      </section>
+    ) : null,
+  )}
+</BaseLayout>

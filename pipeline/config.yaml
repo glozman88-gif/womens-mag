@@ -1,0 +1,34 @@
+poll_interval_minutes: 60
+max_new_articles_per_cycle: 6
+
+sources:
+  - name: woman
+    type: rss
+    url: https://www.woman.ru/rss-feeds/rss.xml
+    enabled: true
+    category_hint: stil-zhizni
+
+  - name: marieclaire
+    type: rss
+    url: https://www.marieclaire.ru/rss-feeds/rss.xml
+    enabled: true
+    category_hint: moda
+
+  - name: 7days
+    type: rss
+    url: https://7days.ru/rss/all.xml
+    enabled: true
+    category_hint: zvezdy
+
+  - name: starhit
+    type: rss
+    url: https://www.starhit.ru/rss/
+    enabled: true
+    category_hint: zvezdy
+
+  - name: passion
+    type: html
+    url: https://www.passion.ru/
+    parser: passion
+    enabled: true
+    category_hint: zvezdy

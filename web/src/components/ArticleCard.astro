@@ -1,0 +1,88 @@
+---
+import { CATEGORY_META } from "~/content/config";
+
+export interface Props {
+  href: string;
+  title: string;
+  description?: string;
+  category: keyof typeof CATEGORY_META;
+  heroImage?: string;
+  heroImageAlt?: string;
+  publishedAt: Date;
+  variant?: "hero" | "large" | "medium" | "small";
+}
+
+const {
+  href,
+  title,
+  description,
+  category,
+  heroImage,
+  heroImageAlt,
+  publishedAt,
+  variant = "medium",
+} = Astro.props;
+
+const categoryLabel = CATEGORY_META[category]?.label ?? category;
+
+const dateFmt = new Intl.DateTimeFormat("ru-RU", {
+  day: "numeric",
+  month: "long",
+});
+---
+
+<article
+  class:list={[
+    "group",
+    variant === "hero" && "md:col-span-2 md:row-span-2",
+    variant === "large" && "md:col-span-2",
+  ]}
+>
+  <a href={href} class="no-underline block h-full">
+    {heroImage && (
+      <div
+        class:list={[
+          "relative overflow-hidden rounded-2xl bg-sand/40",
+          variant === "hero" && "aspect-[4/5] md:aspect-[5/6]",
+          variant === "large" && "aspect-[16/10]",
+          variant === "medium" && "aspect-[4/3]",
+          variant === "small" && "aspect-square",
+        ]}
+      >
+        <img
+          src={heroImage}
+          alt={heroImageAlt ?? title}
+          loading="lazy"
+          decoding="async"
+          class="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-700"
+        />
+      </div>
+    )}
+
+    <div class:list={["pt-4", variant === "hero" && "pt-5"]}>
+      <div class="flex items-center gap-3 text-xs text-ink/60">
+        <span class="kicker">{categoryLabel}</span>
+        <span aria-hidden="true">·</span>
+        <time datetime={publishedAt.toISOString()}>{dateFmt.format(publishedAt)}</time>
+      </div>
+
+      <h3
+        class:list={[
+          "mt-2 font-serif tracking-tight group-hover:text-terracotta transition-colors",
+          variant === "hero" && "text-hero",
+          variant === "large" && "text-2xl md:text-3xl leading-tight",
+          variant === "medium" && "text-xl leading-snug",
+          variant === "small" && "text-base leading-snug",
+        ]}
+      >
+        {title}
+      </h3>
+
+      {description && (variant === "hero" || variant === "large") && (
+        <p class="mt-3 text-ink/70 text-sm md:text-base max-w-prose line-clamp-3">
+          {description}
+        </p>
+      )}
+    </div>
+  </a>
+</article>

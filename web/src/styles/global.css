@@ -1,0 +1,55 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: light;
+  }
+
+  html {
+    @apply bg-cream text-ink antialiased;
+    font-feature-settings: "ss01", "cv11";
+  }
+
+  body {
+    @apply font-sans;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-serif font-medium tracking-tight;
+  }
+
+  a {
+    @apply underline-offset-4 decoration-ink/30 hover:decoration-ink transition-colors;
+  }
+
+  ::selection {
+    @apply bg-coral/20 text-ink;
+  }
+}
+
+@layer components {
+  .grain {
+    position: relative;
+    isolation: isolate;
+  }
+  .grain::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.06;
+    mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.7'/></svg>");
+    z-index: 1;
+  }
+
+  .container-prose {
+    @apply mx-auto px-5 md:px-8 max-w-6xl;
+  }
+
+  .kicker {
+    @apply uppercase tracking-[0.2em] text-xs font-medium text-terracotta;
+  }
+}

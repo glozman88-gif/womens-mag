@@ -1,0 +1,87 @@
+---
+import type { CollectionEntry } from "astro:content";
+import ArticleCard from "./ArticleCard.astro";
+
+export interface Props {
+  articles: CollectionEntry<"articles">[];
+}
+
+const { articles } = Astro.props;
+const [hero, ...rest] = articles;
+const [a, b, c, d] = rest;
+---
+
+<section class="container-prose pt-8 md:pt-12 pb-section">
+  <div class="grid gap-6 md:gap-8 md:grid-cols-4 md:auto-rows-[18rem]">
+    {hero && (
+      <div class="md:col-span-2 md:row-span-2">
+        <ArticleCard
+          href={`/${hero.data.category}/${hero.slug}`}
+          title={hero.data.title}
+          description={hero.data.description}
+          category={hero.data.category}
+          heroImage={hero.data.heroImage}
+          heroImageAlt={hero.data.heroImageAlt}
+          publishedAt={hero.data.publishedAt}
+          variant="hero"
+        />
+      </div>
+    )}
+    {a && (
+      <div class="md:col-span-2">
+        <ArticleCard
+          href={`/${a.data.category}/${a.slug}`}
+          title={a.data.title}
+          description={a.data.description}
+          category={a.data.category}
+          heroImage={a.data.heroImage}
+          heroImageAlt={a.data.heroImageAlt}
+          publishedAt={a.data.publishedAt}
+          variant="large"
+        />
+      </div>
+    )}
+    {b && (
+      <div>
+        <ArticleCard
+          href={`/${b.data.category}/${b.slug}`}
+          title={b.data.title}
+          category={b.data.category}
+          heroImage={b.data.heroImage}
+          heroImageAlt={b.data.heroImageAlt}
+          publishedAt={b.data.publishedAt}
+          variant="medium"
+        />
+      </div>
+    )}
+    {c && (
+      <div>
+        <ArticleCard
+          href={`/${c.data.category}/${c.slug}`}
+          title={c.data.title}
+          category={c.data.category}
+          heroImage={c.data.heroImage}
+          heroImageAlt={c.data.heroImageAlt}
+          publishedAt={c.data.publishedAt}
+          variant="medium"
+        />
+      </div>
+    )}
+  </div>
+
+  {d && (
+    <div class="mt-12 grid gap-6 md:grid-cols-4">
+      {rest.slice(3, 7).map((entry) => (
+        <ArticleCard
+          href={`/${entry.data.category}/${entry.slug}`}
+          title={entry.data.title}
+          category={entry.data.category}
+          heroImage={entry.data.heroImage}
+          heroImageAlt={entry.data.heroImageAlt}
+          publishedAt={entry.data.publishedAt}
+          variant="small"
+        />
+      ))}
+    </div>
+  )}
+</section>

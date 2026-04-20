@@ -1,0 +1,29 @@
+---
+import BaseLayout from "~/layouts/BaseLayout.astro";
+import { SITE } from "~/consts";
+---
+
+<BaseLayout
+  title="О проекте"
+  description={`${SITE.name} — онлайн-журнал о моде, красоте, звёздах и отношениях.`}
+>
+  <section class="container-prose py-section">
+    <p class="kicker">О проекте</p>
+    <h1 class="font-serif text-display mt-3">{SITE.name}</h1>
+    <div class="prose prose-lg max-w-reading mt-8">
+      <p>
+        {SITE.name} — онлайн-журнал для современных женщин о том, что важно и интересно:
+        моде, красоте, шоу-бизнесе, отношениях и стиле жизни.
+      </p>
+      <p>
+        Мы следим за трендами, анализируем новости и готовим материалы на основе открытых
+        источников. На каждой статье указан первоисточник.
+      </p>
+      <h2>Связь с редакцией</h2>
+      <p>
+        По вопросам сотрудничества и жалобам на контент пишите по адресу, указанному
+        на странице <a href="/contacts">Контакты</a>.
+      </p>
+    </div>
+  </section>
+</BaseLayout>

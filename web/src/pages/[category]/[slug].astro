@@ -1,0 +1,130 @@
+---
+import { getCollection, type CollectionEntry } from "astro:content";
+import BaseLayout from "~/layouts/BaseLayout.astro";
+import { CATEGORY_META } from "~/content/config";
+import { SITE } from "~/consts";
+
+export async function getStaticPaths() {
+  const articles = await getCollection("articles", ({ data }) => !data.draft);
+  return articles.map((entry) => ({
+    params: { category: entry.data.category, slug: entry.slug },
+    props: { entry },
+  }));
+}
+
+type Props = { entry: CollectionEntry<"articles"> };
+const { entry } = Astro.props as Props;
+const { Content } = await entry.render();
+const { data } = entry;
+const meta = CATEGORY_META[data.category];
+
+const dateFmt = new Intl.DateTimeFormat("ru-RU", {
+  day: "numeric",
+  month: "long",
+  year: "numeric",
+});
+
+const canonical = new URL(Astro.url.pathname, Astro.site).toString();
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "NewsArticle",
+  headline: data.title,
+  description: data.description,
+  image: data.heroImage ? [new URL(data.heroImage, Astro.site).toString()] : undefined,
+  datePublished: data.publishedAt.toISOString(),
+  dateModified: (data.updatedAt ?? data.publishedAt).toISOString(),
+  author: { "@type": "Organization", name: data.author },
+  publisher: {
+    "@type": "Organization",
+    name: SITE.name,
+    logo: {
+      "@type": "ImageObject",
+      url: new URL("/favicon.svg", Astro.site).toString(),
+    },
+  },
+  mainEntityOfPage: { "@type": "WebPage", "@id": canonical },
+  articleSection: meta.label,
+  inLanguage: "ru-RU",
+  keywords: data.tags?.join(", "),
+};
+---
+
+<BaseLayout
+  title={data.title}
+  description={data.description}
+  image={data.heroImage}
+  type="article"
+  article={{
+    publishedAt: data.publishedAt,
+    updatedAt: data.updatedAt,
+    category: meta.label,
+    author: data.author,
+    tags: data.tags,
+  }}
+  jsonLd={jsonLd}
+>
+  <article class="pb-section">
+    <header class="container-prose pt-12 md:pt-16">
+      <nav class="text-sm text-ink/60 mb-6 flex gap-2" aria-label="Навигация">
+        <a href="/" class="no-underline hover:text-terracotta">Главная</a>
+        <span aria-hidden="true">/</span>
+        <a href={`/${data.category}`} class="no-underline hover:text-terracotta">
+          {meta.label}
+        </a>
+      </nav>
+
+      <p class="kicker">{meta.label}</p>
+      <h1 class="font-serif text-display mt-3 max-w-4xl">{data.title}</h1>
+      <p class="mt-6 text-lg md:text-xl text-ink/75 max-w-reading font-serif italic">
+        {data.description}
+      </p>
+
+      <div class="mt-8 flex items-center gap-4 text-sm text-ink/60">
+        <span>{data.author}</span>
+        <span aria-hidden="true">·</span>
+        <time datetime={data.publishedAt.toISOString()}>
+          {dateFmt.format(data.publishedAt)}
+        </time>
+      </div>
+    </header>
+
+    {data.heroImage && (
+      <figure class="container-prose mt-10">
+        <div class="aspect-[16/9] md:aspect-[16/8] rounded-2xl overflow-hidden bg-sand/40">
+          <img
+            src={data.heroImage}
+            alt={data.heroImageAlt ?? data.title}
+            loading="eager"
+            class="w-full h-full object-cover"
+          />
+        </div>
+      </figure>
+    )}
+
+    <div class="container-prose mt-12">
+      <div class="prose prose-lg max-w-reading mx-auto
+                  prose-headings:font-serif prose-headings:tracking-tight
+                  prose-a:text-terracotta prose-a:underline-offset-4
+                  prose-img:rounded-xl">
+        <Content />
+      </div>
+
+      <footer class="max-w-reading mx-auto mt-16 pt-8 border-t border-ink/10 text-sm text-ink/60">
+        <p>
+          Материал подготовлен на основе публикации{" "}
+          <a href={data.sourceUrl} rel="nofollow noopener" target="_blank" class="text-terracotta">
+            {data.sourceName}
+          </a>.
+        </p>
+        {data.tags.length > 0 && (
+          <ul class="mt-4 flex flex-wrap gap-2">
+            {data.tags.map((t) => (
+              <li class="px-3 py-1 rounded-full bg-sand/50 text-xs">#{t}</li>
+            ))}
+          </ul>
+        )}
+      </footer>
+    </div>
+  </article>
+</BaseLayout>
