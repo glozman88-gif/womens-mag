@@ -48,13 +48,12 @@ def write_article_md(
     hero_image_alt: Optional[str],
 ) -> Path:
     slug = slugify(rewritten.title)
-    category_dir = content_dir / rewritten.category
-    category_dir.mkdir(parents=True, exist_ok=True)
+    content_dir.mkdir(parents=True, exist_ok=True)
 
-    path = category_dir / f"{slug}.md"
+    path = content_dir / f"{slug}.md"
     counter = 2
     while path.exists():
-        path = category_dir / f"{slug}-{counter}.md"
+        path = content_dir / f"{slug}-{counter}.md"
         counter += 1
 
     published = article.published_at or datetime.now(timezone.utc)
