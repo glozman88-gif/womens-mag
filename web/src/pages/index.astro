@@ -5,6 +5,7 @@ import BentoHero from "~/components/BentoHero.astro";
 import ArticleCard from "~/components/ArticleCard.astro";
 import { CATEGORY_META } from "~/content/config";
 import { SITE } from "~/consts";
+import { url } from "~/utils/url";
 
 const allArticles = (await getCollection("articles", ({ data }) => !data.draft))
   .sort((a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf());
@@ -54,7 +55,7 @@ const jsonLd = {
             <h2 class="font-serif text-3xl md:text-4xl mt-1">{meta.label}</h2>
           </div>
           <a
-            href={`/${key}`}
+            href={url(`/${key}`)}
             class="no-underline text-sm text-ink/70 hover:text-terracotta"
           >
             Все материалы →

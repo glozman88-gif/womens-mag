@@ -1,5 +1,6 @@
 ---
 import { SITE } from "~/consts";
+import { absoluteUrl } from "~/utils/url";
 
 export interface Props {
   title: string;
@@ -29,7 +30,7 @@ const {
 
 const canonicalUrl = canonical ?? new URL(Astro.url.pathname, Astro.site).toString();
 const fullTitle = title === SITE.name ? SITE.name : `${title} — ${SITE.name}`;
-const imageUrl = image ? new URL(image, Astro.site).toString() : undefined;
+const imageUrl = image ? absoluteUrl(image, Astro.site!) : undefined;
 ---
 
 <title>{fullTitle}</title>

@@ -1,6 +1,7 @@
 import type { APIContext } from "astro";
 import { getCollection } from "astro:content";
 import { CATEGORY_META } from "~/content/config";
+import { absoluteUrl } from "~/utils/url";
 
 export async function GET(context: APIContext) {
   const site = context.site!;
@@ -9,7 +10,7 @@ export async function GET(context: APIContext) {
   const urls: { loc: string; lastmod?: string; priority?: string; changefreq?: string }[] = [];
 
   const add = (path: string, opts: Partial<{ lastmod: string; priority: string; changefreq: string }> = {}) => {
-    urls.push({ loc: new URL(path, site).toString(), ...opts });
+    urls.push({ loc: absoluteUrl(path, site), ...opts });
   };
 
   add("/", { priority: "1.0", changefreq: "daily" });

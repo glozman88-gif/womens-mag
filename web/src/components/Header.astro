@@ -1,11 +1,12 @@
 ---
 import { SITE, NAV } from "~/consts";
+import { url } from "~/utils/url";
 const current = Astro.url.pathname;
 ---
 
 <header class="border-b border-ink/10 bg-cream/80 backdrop-blur sticky top-0 z-40">
   <div class="container-prose flex items-center justify-between py-5">
-    <a href="/" class="no-underline flex items-baseline gap-2" aria-label={SITE.name}>
+    <a href={url("/")} class="no-underline flex items-baseline gap-2" aria-label={SITE.name}>
       <span class="font-serif text-3xl tracking-tight italic">{SITE.name}</span>
       <span class="hidden md:inline text-xs text-ink/50 uppercase tracking-[0.2em]">
         {SITE.tagline}
@@ -17,10 +18,10 @@ const current = Astro.url.pathname;
         {NAV.map(({ label, href }) => (
           <li>
             <a
-              href={href}
+              href={url(href)}
               class:list={[
                 "no-underline hover:text-terracotta transition-colors",
-                current.startsWith(href) && "text-terracotta",
+                current.startsWith(url(href)) && "text-terracotta",
               ]}
             >
               {label}
@@ -46,7 +47,7 @@ const current = Astro.url.pathname;
     <ul class="container-prose py-4 grid gap-3 text-base">
       {NAV.map(({ label, href }) => (
         <li>
-          <a href={href} class="no-underline block py-1">{label}</a>
+          <a href={url(href)} class="no-underline block py-1">{label}</a>
         </li>
       ))}
     </ul>

@@ -4,6 +4,7 @@ import { SITE } from "~/consts";
 import SEO from "~/components/SEO.astro";
 import Header from "~/components/Header.astro";
 import Footer from "~/components/Footer.astro";
+import { url } from "~/utils/url";
 
 export interface Props {
   title: string;
@@ -29,9 +30,9 @@ const { title, description, image, type, article, jsonLd } = Astro.props;
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="generator" content={Astro.generator} />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="sitemap" href="/sitemap.xml" />
-    <link rel="alternate" type="application/rss+xml" title={SITE.name} href="/rss.xml" />
+    <link rel="icon" type="image/svg+xml" href={url("/favicon.svg")} />
+    <link rel="sitemap" href={url("/sitemap.xml")} />
+    <link rel="alternate" type="application/rss+xml" title={SITE.name} href={url("/rss.xml")} />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />

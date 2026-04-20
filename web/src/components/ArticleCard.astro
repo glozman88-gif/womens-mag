@@ -1,5 +1,6 @@
 ---
 import { CATEGORY_META } from "~/content/config";
+import { url } from "~/utils/url";
 
 export interface Props {
   href: string;
@@ -38,7 +39,7 @@ const dateFmt = new Intl.DateTimeFormat("ru-RU", {
     variant === "large" && "md:col-span-2",
   ]}
 >
-  <a href={href} class="no-underline block h-full">
+  <a href={url(href)} class="no-underline block h-full">
     {heroImage && (
       <div
         class:list={[
@@ -50,7 +51,7 @@ const dateFmt = new Intl.DateTimeFormat("ru-RU", {
         ]}
       >
         <img
-          src={heroImage}
+          src={url(heroImage)}
           alt={heroImageAlt ?? title}
           loading="lazy"
           decoding="async"

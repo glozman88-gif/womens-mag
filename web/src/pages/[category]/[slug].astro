@@ -3,6 +3,7 @@ import { getCollection, type CollectionEntry } from "astro:content";
 import BaseLayout from "~/layouts/BaseLayout.astro";
 import { CATEGORY_META } from "~/content/config";
 import { SITE } from "~/consts";
+import { url, absoluteUrl } from "~/utils/url";
 
 export async function getStaticPaths() {
   const articles = await getCollection("articles", ({ data }) => !data.draft);
@@ -24,14 +25,15 @@ const dateFmt = new Intl.DateTimeFormat("ru-RU", {
   year: "numeric",
 });
 
-const canonical = new URL(Astro.url.pathname, Astro.site).toString();
+const articlePath = `/${data.category}/${entry.slug}`;
+const canonical = absoluteUrl(articlePath, Astro.site!);
 
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "NewsArticle",
   headline: data.title,
   description: data.description,
-  image: data.heroImage ? [new URL(data.heroImage, Astro.site).toString()] : undefined,
+  image: data.heroImage ? [absoluteUrl(data.heroImage, Astro.site!)] : undefined,
   datePublished: data.publishedAt.toISOString(),
   dateModified: (data.updatedAt ?? data.publishedAt).toISOString(),
   author: { "@type": "Organization", name: data.author },
@@ -40,7 +42,7 @@ const jsonLd = {
     name: SITE.name,
     logo: {
       "@type": "ImageObject",
-      url: new URL("/favicon.svg", Astro.site).toString(),
+      url: absoluteUrl("/favicon.svg", Astro.site!),
     },
   },
   mainEntityOfPage: { "@type": "WebPage", "@id": canonical },
@@ -67,9 +69,9 @@ const jsonLd = {
   <article class="pb-section">
     <header class="container-prose pt-12 md:pt-16">
       <nav class="text-sm text-ink/60 mb-6 flex gap-2" aria-label="Навигация">
-        <a href="/" class="no-underline hover:text-terracotta">Главная</a>
+        <a href={url("/")} class="no-underline hover:text-terracotta">Главная</a>
         <span aria-hidden="true">/</span>
-        <a href={`/${data.category}`} class="no-underline hover:text-terracotta">
+        <a href={url(`/${data.category}`)} class="no-underline hover:text-terracotta">
           {meta.label}
         </a>
       </nav>
@@ -93,7 +95,7 @@ const jsonLd = {
       <figure class="container-prose mt-10">
         <div class="aspect-[16/9] md:aspect-[16/8] rounded-2xl overflow-hidden bg-sand/40">
           <img
-            src={data.heroImage}
+            src={url(data.heroImage)}
             alt={data.heroImageAlt ?? data.title}
             loading="eager"
             class="w-full h-full object-cover"
