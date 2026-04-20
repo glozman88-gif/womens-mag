@@ -1,6 +1,5 @@
 import { defineConfig } from "astro/config";
 import tailwind from "@astrojs/tailwind";
-import sitemap from "@astrojs/sitemap";
 
 // SITE can be set via env (CI sets it to the real GitHub Pages URL or custom domain).
 // Defaults to a placeholder so the build works locally too.
@@ -21,10 +20,6 @@ export default defineConfig({
   integrations: [
     tailwind({
       applyBaseStyles: false,
-    }),
-    sitemap({
-      changefreq: "daily",
-      priority: 0.7,
     }),
   ],
   markdown: {

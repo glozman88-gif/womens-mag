@@ -1,6 +1,4 @@
 User-agent: *
 Allow: /
 
-# Sitemap путь автоматически генерируется интеграцией @astrojs/sitemap.
-# Замените на реальный домен после привязки.
-Sitemap: https://example.github.io/womens-mag/sitemap-index.xml
+Sitemap: https://glozman88-gif.github.io/womens-mag/sitemap.xml
