@@ -1,9 +1,9 @@
 name: Parse, build and deploy
 
 on:
-  schedule:
-    # Каждые 3 часа (UTC). GH cron может задерживать запуск на 10-15 мин.
-    - cron: "17 */3 * * *"
+  # Парсинг по расписанию приостановлен. Раскомментируйте строку ниже чтобы возобновить.
+  # schedule:
+  #   - cron: "17 */3 * * *"
   workflow_dispatch:
     inputs:
       skip_parser:
